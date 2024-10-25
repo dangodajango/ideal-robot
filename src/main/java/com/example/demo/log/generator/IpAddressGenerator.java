@@ -19,12 +19,12 @@ public class IpAddressGenerator {
         int thirdOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
         int forthOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
         String generatedIpAddress = "%s.%s.%s.%s".formatted(firstOctet, secondOctet, thirdOctet, forthOctet);
-        assert isValidIpAddress(generatedIpAddress) : "Generated IP address is not valid - %s".formatted(generatedIpAddress);
+        assert isIpAddressValid(generatedIpAddress) : "Generated IP address is not valid - %s".formatted(generatedIpAddress);
         return generatedIpAddress;
     }
 
 
-    private boolean isValidIpAddress(String ipAddress) {
+    private boolean isIpAddressValid(String ipAddress) {
         String[] octets = ipAddress.split("\\.");
         if (octets.length != 4) {
             return false;
