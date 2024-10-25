@@ -1,0 +1,10 @@
+/books
+/users
+/orders
+/products
+/categories
+/authors
+/reviews
+/comments
+/payments
+/sessions

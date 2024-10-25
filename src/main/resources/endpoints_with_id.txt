@@ -1,0 +1,9 @@
+/books/{id}
+/users/{id}
+/orders/{id}
+/products/{id}
+/categories/{id}
+/authors/{id}
+/reviews/{id}
+/comments/{id}
+/payments/{id}
