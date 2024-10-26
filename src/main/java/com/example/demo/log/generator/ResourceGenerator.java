@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @Slf4j
@@ -22,18 +23,15 @@ public class ResourceGenerator {
 
     private final RandomNumberGenerator randomNumberGenerator;
 
-    private final RandomStringGenerator randomStringGenerator;
-
-    public ResourceGenerator(RandomNumberGenerator randomNumberGenerator, RandomStringGenerator randomStringGenerator) {
+    public ResourceGenerator(RandomNumberGenerator randomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator;
-        this.randomStringGenerator = randomStringGenerator;
         try {
             endpointsWithId = Files.readAllLines(Paths.get("src/main/resources/endpoints_with_id.txt"));
             assert !endpointsWithId.isEmpty() : "endpoints_with_id.txt must have at least 1 entry";
             endpointsWithId.forEach(endpointWithId -> {
                 assert !endpointWithId.isBlank() : "endpointWithId must not be blank, but it was - %s".formatted(endpointWithId);
                 assert endpointWithId.contains("{id}") : "endpointWithId must contain an {id} tag, but it doesn't - %s".formatted(endpointWithId);
-                assert endpointWithId.split("/").length == 2 : "endpointWithId must contain only 2 sections, but it does - %s".formatted(endpointWithId);
+                assert endpointWithId.substring(1).split("/").length == 2 : "endpointWithId must contain only 2 sections, but it contains - %s (%s)".formatted(endpointWithId.substring(1).split("/").length == 2, endpointWithId);
             });
 
             endpointsWithoutId = Files.readAllLines(Paths.get("src/main/resources/endpoints_without_id.txt"));
@@ -41,7 +39,7 @@ public class ResourceGenerator {
             endpointsWithoutId.forEach(endpointWithoutId -> {
                 assert !endpointWithoutId.isBlank() : "endpointsWithoutId must not be blank, but it was - %s".formatted(endpointsWithoutId);
                 assert !endpointWithoutId.contains("{id}") : "endpointWithoutId must not contain an {id} tag, but it does - %s".formatted(endpointWithoutId);
-                assert endpointWithoutId.split("/").length == 1 : "endpointWithoutId must not have more than 1 sections in it, but it does - %s".formatted(endpointWithoutId);
+                assert endpointWithoutId.substring(1).split("/").length == 1 : "endpointWithoutId must not have more than 1 sections in it, but it contains - %s (%s)".formatted(endpointWithoutId.substring(1).split("/").length, endpointWithoutId);
             });
         } catch (IOException exception) {
             log.error("Error occurred while retrieving the endpoints", exception);
@@ -49,20 +47,22 @@ public class ResourceGenerator {
         }
     }
 
-    public void generateResource() {
+    public String generateResource() {
         int randomVerbIndex = randomNumberGenerator.generateRandomNumberInRange(0, HTTP_VERBS.length - 1);
         HttpVerbs httpVerb = HTTP_VERBS[randomVerbIndex];
         String endpoint = switch (httpVerb) {
+            case PUT, DELETE -> retrieveEndpointWithId();
             case POST, HEAD -> retrieveEndpointWithoutId();
             case GET -> retrieveRandomEndpoint();
-            case PUT, DELETE -> retrieveEndpointWithId();
         };
+        String httpVersion = retrieveRandomHttpVersion();
+        return "%s %s %s".formatted(httpVerb.getVerb(), endpoint, httpVersion);
     }
 
     private String retrieveEndpointWithId() {
         int randomEndpointIndex = randomNumberGenerator.generateRandomNumberInRange(0, endpointsWithId.size() - 1);
         String endpointWithId = endpointsWithId.get(randomEndpointIndex);
-        String randomId = randomStringGenerator.generateRandomString();
+        String randomId = UUID.randomUUID().toString();
         return endpointWithId.replace("{id}", randomId);
     }
 
@@ -78,6 +78,17 @@ public class ResourceGenerator {
         } else {
             return retrieveEndpointWithId();
         }
+    }
+
+    private String retrieveRandomHttpVersion() {
+        int randomHttpVersionProbability = randomNumberGenerator.generateRandomNumberInRange(1, 3);
+        return switch (randomHttpVersionProbability) {
+            case 1 -> "HTTP/1.1";
+            case 2 -> "HTTP/2";
+            case 3 -> "HTTP/3";
+            default ->
+                    throw new IllegalStateException("Unexpected randomHttpVersionProbability value: " + randomHttpVersionProbability);
+        };
     }
 }
 
