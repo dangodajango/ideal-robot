@@ -1,7 +1,5 @@
 package com.example.demo.log.generator;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -90,16 +88,4 @@ public class ResourceGenerator {
                     throw new IllegalStateException("Unexpected randomHttpVersionProbability value: " + randomHttpVersionProbability);
         };
     }
-}
-
-@RequiredArgsConstructor
-@Getter
-enum HttpVerbs {
-    GET("Get"),
-    POST("Post"),
-    PUT("Put"),
-    DELETE("Delete"),
-    HEAD("Head");
-
-    private final String verb;
 }
