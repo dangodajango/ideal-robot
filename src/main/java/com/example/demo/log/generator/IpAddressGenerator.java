@@ -14,10 +14,10 @@ public class IpAddressGenerator {
     private final RandomNumberGenerator randomNumberGenerator;
 
     public String generateIpAddress() {
-        int firstOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
-        int secondOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
-        int thirdOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
-        int forthOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
+        final int firstOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
+        final int secondOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
+        final int thirdOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
+        final int forthOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
         return "%s.%s.%s.%s".formatted(firstOctet, secondOctet, thirdOctet, forthOctet);
     }
 }

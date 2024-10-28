@@ -21,7 +21,7 @@ public class ResourceGenerator {
 
     private final RandomNumberGenerator randomNumberGenerator;
 
-    public ResourceGenerator(RandomNumberGenerator randomNumberGenerator) {
+    public ResourceGenerator(final RandomNumberGenerator randomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator;
         try {
             endpointsWithId = Files.readAllLines(Paths.get("src/main/resources/endpoints_with_id.txt"));
@@ -46,31 +46,31 @@ public class ResourceGenerator {
     }
 
     public String generateResource() {
-        int randomVerbIndex = randomNumberGenerator.generateRandomNumberInRange(0, HTTP_VERBS.length - 1);
-        HttpVerbs httpVerb = HTTP_VERBS[randomVerbIndex];
-        String endpoint = switch (httpVerb) {
+        final int randomVerbIndex = randomNumberGenerator.generateRandomNumberInRange(0, HTTP_VERBS.length - 1);
+        final HttpVerbs httpVerb = HTTP_VERBS[randomVerbIndex];
+        final String endpoint = switch (httpVerb) {
             case PUT, DELETE -> retrieveEndpointWithId();
             case POST, HEAD -> retrieveEndpointWithoutId();
             case GET -> retrieveRandomEndpoint();
         };
-        String httpVersion = retrieveRandomHttpVersion();
+        final String httpVersion = retrieveRandomHttpVersion();
         return "%s %s %s".formatted(httpVerb.getVerb(), endpoint, httpVersion);
     }
 
     private String retrieveEndpointWithId() {
-        int randomEndpointIndex = randomNumberGenerator.generateRandomNumberInRange(0, endpointsWithId.size() - 1);
-        String endpointWithId = endpointsWithId.get(randomEndpointIndex);
-        String randomId = UUID.randomUUID().toString();
+        final int randomEndpointIndex = randomNumberGenerator.generateRandomNumberInRange(0, endpointsWithId.size() - 1);
+        final String endpointWithId = endpointsWithId.get(randomEndpointIndex);
+        final String randomId = UUID.randomUUID().toString();
         return endpointWithId.replace("{id}", randomId);
     }
 
     private String retrieveEndpointWithoutId() {
-        int randomEndpointIndex = randomNumberGenerator.generateRandomNumberInRange(0, endpointsWithoutId.size() - 1);
+        final int randomEndpointIndex = randomNumberGenerator.generateRandomNumberInRange(0, endpointsWithoutId.size() - 1);
         return endpointsWithoutId.get(randomEndpointIndex);
     }
 
     private String retrieveRandomEndpoint() {
-        int randomEndpointProbability = randomNumberGenerator.generateRandomNumberInRange(1, 100);
+        final int randomEndpointProbability = randomNumberGenerator.generateRandomNumberInRange(1, 100);
         if (randomEndpointProbability <= 50) {
             return retrieveEndpointWithoutId();
         } else {
@@ -79,7 +79,7 @@ public class ResourceGenerator {
     }
 
     private String retrieveRandomHttpVersion() {
-        int randomHttpVersionProbability = randomNumberGenerator.generateRandomNumberInRange(1, 3);
+        final int randomHttpVersionProbability = randomNumberGenerator.generateRandomNumberInRange(1, 3);
         return switch (randomHttpVersionProbability) {
             case 1 -> "HTTP/1.1";
             case 2 -> "HTTP/2";

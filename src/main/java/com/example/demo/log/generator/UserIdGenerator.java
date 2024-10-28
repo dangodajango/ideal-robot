@@ -16,14 +16,10 @@ public class UserIdGenerator {
 
     private final RandomNumberGenerator randomNumberGenerator;
 
-    private List<String> availableUserIds;
+    private final List<String> availableUserIds;
 
     public UserIdGenerator(RandomNumberGenerator randomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator;
-        populateAvailableUserIds();
-    }
-
-    private void populateAvailableUserIds() {
         try {
             availableUserIds = Files.readAllLines(Paths.get("src/main/resources/user_ids.txt"));
             assert !availableUserIds.isEmpty() : "user_ids.txt must have at least 1 entry";
@@ -39,11 +35,11 @@ public class UserIdGenerator {
     }
 
     public String generateUserId() {
-        int blankUserProbability = randomNumberGenerator.generateRandomNumberInRange(1, 100);
+        final int blankUserProbability = randomNumberGenerator.generateRandomNumberInRange(1, 100);
         if (blankUserProbability <= 30) {
             return UNAUTHENTICATED_USER_ID;
         } else {
-            int randomUserId = randomNumberGenerator.generateRandomNumberInRange(0, availableUserIds.size() - 1);
+            final int randomUserId = randomNumberGenerator.generateRandomNumberInRange(0, availableUserIds.size() - 1);
             return availableUserIds.get(randomUserId);
         }
     }

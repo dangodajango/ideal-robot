@@ -14,7 +14,7 @@ public class StatusCodeGenerator {
     private final RandomNumberGenerator randomNumberGenerator;
 
     public int generateStatusCode() {
-        int randomStatusCodeIndex = randomNumberGenerator.generateRandomNumberInRange(0, AVAILABLE_STATUS_CODES.size() - 1);
+        final int randomStatusCodeIndex = randomNumberGenerator.generateRandomNumberInRange(0, AVAILABLE_STATUS_CODES.size() - 1);
         return AVAILABLE_STATUS_CODES.get(randomStatusCodeIndex);
     }
 }

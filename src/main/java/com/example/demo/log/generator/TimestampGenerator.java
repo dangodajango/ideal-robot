@@ -20,18 +20,18 @@ public class TimestampGenerator {
     private LocalDateTime currentTimestamp;
 
     public String generateTimestamp() {
-        int randomIncrement = randomNumberGenerator.generateRandomNumberInRange(1, 5000);
+        final int randomIncrement = randomNumberGenerator.generateRandomNumberInRange(1, 5000);
         if (currentTimestamp == null) {
             currentTimestamp = STARTING_TIMESTAMP.plus(Duration.ofMillis(randomIncrement));
             assert currentTimestamp.isAfter(STARTING_TIMESTAMP) : "currentTimestamp must be after the startingTimestamp, but it was - %s, starting - %s"
                     .formatted(currentTimestamp.format(TIMESTAMP_FORMAT), STARTING_TIMESTAMP.format(TIMESTAMP_FORMAT));
         } else {
-            LocalDateTime incrementedTimestamp = currentTimestamp.plus(Duration.ofMillis(randomIncrement));
+            final LocalDateTime incrementedTimestamp = currentTimestamp.plus(Duration.ofMillis(randomIncrement));
             assert incrementedTimestamp.isAfter(currentTimestamp) : "incrementedTimestamp must be after the previous timestamp, but it was - %s, previous - %s"
                     .formatted(incrementedTimestamp.format(TIMESTAMP_FORMAT), currentTimestamp.format(TIMESTAMP_FORMAT));
             currentTimestamp = incrementedTimestamp;
         }
-        String generatedTimestamp = currentTimestamp.format(TIMESTAMP_FORMAT);
+        final String generatedTimestamp = currentTimestamp.format(TIMESTAMP_FORMAT);
         assert generatedTimestamp.matches("\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2}") : "generatedTimestamp is not valid - %s".formatted(generatedTimestamp);
         return generatedTimestamp;
     }
