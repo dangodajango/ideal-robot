@@ -1,4 +1,4 @@
-package com.example.demo.log.generator;
+package hadoop.learning.project.log.generator.log.generator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class UserIdGenerator {
     public UserIdGenerator(RandomNumberGenerator randomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator;
         try {
-            availableUserIds = Files.readAllLines(Paths.get("src/main/resources/user_ids.txt"));
+            availableUserIds = Files.readAllLines(Paths.get("log-generator/src/main/resources/user_ids.txt"));
             assert !availableUserIds.isEmpty() : "user_ids.txt must have at least 1 entry";
             availableUserIds.forEach(availableUserId -> {
                 assert !availableUserId.isBlank() : "availableUserId must not be blank but it was - %s".formatted(availableUserId);

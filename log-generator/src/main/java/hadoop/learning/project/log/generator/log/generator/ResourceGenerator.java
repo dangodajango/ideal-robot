@@ -1,4 +1,4 @@
-package com.example.demo.log.generator;
+package hadoop.learning.project.log.generator.log.generator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -24,7 +24,7 @@ public class ResourceGenerator {
     public ResourceGenerator(final RandomNumberGenerator randomNumberGenerator) {
         this.randomNumberGenerator = randomNumberGenerator;
         try {
-            endpointsWithId = Files.readAllLines(Paths.get("src/main/resources/endpoints_with_id.txt"));
+            endpointsWithId = Files.readAllLines(Paths.get("log-generator/src/main/resources/endpoints_with_id.txt"));
             assert !endpointsWithId.isEmpty() : "endpoints_with_id.txt must have at least 1 entry";
             endpointsWithId.forEach(endpointWithId -> {
                 assert !endpointWithId.isBlank() : "endpointWithId must not be blank, but it was - %s".formatted(endpointWithId);
@@ -32,7 +32,7 @@ public class ResourceGenerator {
                 assert endpointWithId.substring(1).split("/").length == 2 : "endpointWithId must contain only 2 sections, but it contains - %s (%s)".formatted(endpointWithId.substring(1).split("/").length == 2, endpointWithId);
             });
 
-            endpointsWithoutId = Files.readAllLines(Paths.get("src/main/resources/endpoints_without_id.txt"));
+            endpointsWithoutId = Files.readAllLines(Paths.get("log-generator/src/main/resources/endpoints_without_id.txt"));
             assert !endpointsWithoutId.isEmpty() : "endpoints_without_id.txt must have at least 1 entry";
             endpointsWithoutId.forEach(endpointWithoutId -> {
                 assert !endpointWithoutId.isBlank() : "endpointsWithoutId must not be blank, but it was - %s".formatted(endpointsWithoutId);

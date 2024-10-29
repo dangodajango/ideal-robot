@@ -1,4 +1,4 @@
-package com.example.demo.log.generator;
+package hadoop.learning.project.log.generator.log.generator;
 
 import org.springframework.stereotype.Component;
 

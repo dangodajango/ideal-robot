@@ -1,6 +1,6 @@
-package com.example.demo;
+package hadoop.learning.project.log.generator;
 
-import com.example.demo.file.FileManager;
+import hadoop.learning.project.log.generator.file.FileManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
@@ -23,7 +23,8 @@ public class DemoApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        final Path filePath = fileManager.createFile("test.txt");
+        final Path filePath = fileManager.createFile("test12.txt");
         fileManager.writeBatchOfLogsToFile(filePath);
+        fileManager.moveFileToHdfs(filePath);
     }
 }
