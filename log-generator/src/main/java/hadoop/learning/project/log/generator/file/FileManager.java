@@ -1,7 +1,7 @@
 package hadoop.learning.project.log.generator.file;
 
-import hadoop.learning.project.log.generator.log.generator.LogGenerator;
-import hadoop.learning.project.log.generator.log.generator.RandomNumberGenerator;
+import hadoop.learning.project.log.generator.LogGenerator;
+import hadoop.learning.project.log.generator.generator.RandomNumberGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileSystem;
@@ -83,6 +83,8 @@ public class FileManager {
             hadoopFileSystem.copyFromLocalFile(new org.apache.hadoop.fs.Path(filePath.toString()), hdfsPath);
             assert hadoopFileSystem.exists(pathToFileInHdfs) : "file (%s) was not copied to the hdfs".formatted(hdfsPath.toString());
             assert Files.size(filePath) == hadoopFileSystem.getFileStatus(pathToFileInHdfs).getLen() : "file (%s) was not copied entirely to the hdfs".formatted(filePath.toString());
+            Files.delete(filePath);
+            assert !Files.exists(filePath) : "file (%s) has not been deleted successfully after it has been transferred to the HDFS".formatted(filePath.getFileName().toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

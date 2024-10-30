@@ -1,5 +1,6 @@
-package hadoop.learning.project.log.generator.log.generator;
+package hadoop.learning.project.log.generator;
 
+import hadoop.learning.project.log.generator.generator.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package hadoop.learning.project.log.generator.log.generator;
+package hadoop.learning.project.log.generator.generator;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
