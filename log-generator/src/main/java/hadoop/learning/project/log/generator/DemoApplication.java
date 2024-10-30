@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.nio.file.Path;
+import java.util.UUID;
 
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -23,8 +24,13 @@ public class DemoApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        final Path filePath = fileManager.createFile("test12.txt");
-        fileManager.writeBatchOfLogsToFile(filePath);
-        fileManager.moveFileToHdfs(filePath);
+        for (int i = 0; i < 5; i++) {
+            String fileName = UUID.randomUUID() + ".txt";
+            log.info("Creating file {} locally", fileName);
+            final Path filePath = fileManager.createFile(fileName);
+            log.info("Writing logs to file {}", fileName);
+            fileManager.writeBatchOfLogsToFile(filePath);
+            fileManager.moveFileToHdfs(filePath);
+        }
     }
 }
