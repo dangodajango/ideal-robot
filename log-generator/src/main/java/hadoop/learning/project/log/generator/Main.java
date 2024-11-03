@@ -14,10 +14,10 @@ import java.util.UUID;
 @SpringBootApplication
 @RequiredArgsConstructor
 @Slf4j
-public class DemoApplication implements ApplicationRunner {
+public class Main implements ApplicationRunner {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(Main.class, args);
     }
 
     private final FileManager fileManager;
