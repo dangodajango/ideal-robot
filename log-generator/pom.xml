@@ -30,6 +30,7 @@
     </dependencies>
 
     <build>
+        <finalName>log-generator</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

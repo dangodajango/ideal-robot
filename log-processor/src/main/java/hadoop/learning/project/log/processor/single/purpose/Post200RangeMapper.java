@@ -2,6 +2,7 @@ package hadoop.learning.project.log.processor.single.purpose;
 
 import hadoop.learning.project.log.processor.model.LogLine;
 import hadoop.learning.project.log.processor.model.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -24,8 +25,8 @@ import static hadoop.learning.project.log.processor.model.LogLine.mapToLogLine;
  *         Each split is typically a block of data stored in the HDFS.
  *     </li>
  *     <li>
- *         The mapper will read the input splits independently, so if we have multiple mappers receiving the same lines from a HDFS file,
- *         each of them will read the file independently to the others.
+ *         Hadoop can scale the number of mappers, for a given job, so we can have 3 mappers which can be ran on different nodes,
+ *         and each one can process a portion of the splits, which allows us to scale horizontally, and we should prefer to make the mappers stateless.
  *     </li>
  *     <li>
  *         The mapper will process all the lines from the given file, and for each line, it will produce one or more key-value pairs.
@@ -36,11 +37,12 @@ import static hadoop.learning.project.log.processor.model.LogLine.mapToLogLine;
  *     </li>
  * </ol>
  * <br>
- * THe preferred practice is to create separate mapper-reducer pairs based on the business logic.
+ * The preferred practice is to create separate mapper-reducer pairs based on the business logic.
  * Or if some mappers are reading the same data, and producing the same key-value pairs, the mappers can be combined into a single one,
  * which will optimise the job execution because it will read the data once, rather than reading it for each mapper.
  * But in the reducer, there has to be conditional logic in order to know which mapper produced the pair.
  */
+@Slf4j
 public class Post200RangeMapper extends Mapper<Object, Text, Text, IntWritable> {
 
     private static final Text KEY = new Text("POST_200_RANGE_COUNT");
@@ -48,15 +50,15 @@ public class Post200RangeMapper extends Mapper<Object, Text, Text, IntWritable> 
     private static final IntWritable VALUE = new IntWritable(1);
 
     @Override
-    protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-        LogLine logLine = mapToLogLine(value.toString());
-        if (isPostRequest(logLine.resource()) && isIn200Range(logLine.statusCode())) {
+    protected void map(final Object key, final Text value, final Context context) throws IOException, InterruptedException {
+        final LogLine logLine = mapToLogLine(value.toString());
+        if (isPostRequest(logLine.getResource()) && isIn200Range(logLine.getStatusCode())) {
             context.write(KEY, VALUE);
         }
     }
 
     private boolean isPostRequest(Resource resource) {
-        return resource.httpVerb().equals("POST");
+        return resource.getHttpVerb().equals("Post");
     }
 
     private boolean isIn200Range(int statusCode) {

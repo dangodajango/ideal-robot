@@ -1,20 +1,31 @@
 package hadoop.learning.project.log.processor.model;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
-public record LogLine(String ipAddress,
-                      Optional<String> user,
-                      LocalDateTime timestamp,
-                      Resource resource,
-                      int statusCode,
-                      long responseSize) {
+@RequiredArgsConstructor
+@ToString
+@Getter
+@Slf4j
+public class LogLine {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss");
 
+    private final String ipAddress;
+    private final Optional<String> user;
+    private final LocalDateTime timestamp;
+    private final Resource resource;
+    private final int statusCode;
+    private final long responseSize;
+
     public static LogLine mapToLogLine(String logLineString) {
-        String[] logLine = logLineString.split(" ");
+        String[] logLine = logLineString.split(" (?=(?:[^\\\"]*\\\"[^\\\"]*\\\")*[^\\\"]*$)");
         String ipAddress = logLine[0];
         Optional<String> user = logLine[1].equals("-") ? Optional.empty() : Optional.of(logLine[1]);
         LocalDateTime timestamp = parseTimestamp(logLine[2]);

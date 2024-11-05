@@ -1,5 +1,6 @@
 package hadoop.learning.project.log.processor.single.purpose;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -22,14 +23,24 @@ import java.io.IOException;
  *     </li>
  *     <li>
  *         <b>Shuffling:</b> After the <b>partitioning</b> phase, where Hadoop has mapped the key-value pairs to the available reducers,
- *         it will start sending them across the network.
+ *         it will start sending them across the network. Since the mappers are writing to temporary files on the local disk, where they are executed,
+ *         the data is sent in batches, reducing the latency.
+ *     </li>
+ *     <li>
+ *         <b>Sorting:</b> After the data reaches the reducer node, it will be stored in memory, and the key-value pairs will be sorted.
+ *         It's more like grouping rather then sorting, let's say we have "POST_200_RANGE_COUNT" - 1; "POST_200_RANGE_COUNT" - 1,
+ *         Hadoop will group them together like this - "POST_200_RANGE_COUNT" - [1, 1].
+ *     </li>
+ *     <li>
+ *         <b>Reducing:</b> The logic of the reducer will be executed, and it must produce a final key-value pair, which will be stored in a file on the HDFS.
  *     </li>
  * </ol>
  */
+@Slf4j
 public class Post200RangeReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
     @Override
-    protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+    protected void reduce(final Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
         int numberOfPost200RangeRequests = 0;
         for (IntWritable value : values) {
             numberOfPost200RangeRequests += value.get();
