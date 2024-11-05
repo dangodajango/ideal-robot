@@ -3,13 +3,14 @@ package hadoop.learning.project.log.generator.generator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class StatusCodeGenerator {
 
-    private static final List<Integer> AVAILABLE_STATUS_CODES = List.of(200, 201, 204, 301, 302, 304, 400, 401, 404, 500, 502, 503);
+    private static final List<Integer> AVAILABLE_STATUS_CODES = Arrays.asList(200, 201, 204, 301, 302, 304, 400, 401, 404, 500, 502, 503);
 
     private final RandomNumberGenerator randomNumberGenerator;
 

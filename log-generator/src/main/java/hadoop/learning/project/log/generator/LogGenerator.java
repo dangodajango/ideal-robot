@@ -31,6 +31,6 @@ public class LogGenerator {
         final String resource = resourceGenerator.generateResource();
         final int statusCode = statusCodeGenerator.generateStatusCode();
         final int responseSize = responseSizeGenerator.generateResponseSize(resource, statusCode);
-        return "%s %s [%s] \"%s\" %s, %s".formatted(ipAddress, userId, timestamp, resource, statusCode, responseSize);
+        return String.format("%s %s [%s] \"%s\" %s %s", ipAddress, userId, timestamp, resource, statusCode, responseSize);
     }
 }

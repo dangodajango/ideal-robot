@@ -18,6 +18,6 @@ public class IpAddressGenerator {
         final int secondOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
         final int thirdOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
         final int forthOctet = randomNumberGenerator.generateRandomNumberInRange(OCTET_LOWER_BOUND, OCTET_UPPER_BOUND);
-        return "%s.%s.%s.%s".formatted(firstOctet, secondOctet, thirdOctet, forthOctet);
+        return String.format("%s.%s.%s.%s", firstOctet, secondOctet, thirdOctet, forthOctet);
     }
 }

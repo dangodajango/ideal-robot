@@ -14,11 +14,17 @@ public class ResponseSizeGenerator {
             return randomNumberGenerator.generateRandomNumberInRange(100, 1_000);
         }
         final String verb = resource.split(" ")[0];
-        return switch (verb) {
-            case "Get" -> randomNumberGenerator.generateRandomNumberInRange(10_000, 10_000_000);
-            case "Post", "Put" -> randomNumberGenerator.generateRandomNumberInRange(1_000, 10_000);
-            case "Delete", "Head" -> randomNumberGenerator.generateRandomNumberInRange(100, 1_000);
-            default -> throw new IllegalStateException("Unexpected verb value: " + verb);
-        };
+        switch (verb) {
+            case "Get":
+                return randomNumberGenerator.generateRandomNumberInRange(10_000, 10_000_000);
+            case "Post":
+            case "Put":
+                return randomNumberGenerator.generateRandomNumberInRange(1_000, 10_000);
+            case "Delete":
+            case "Head":
+                return randomNumberGenerator.generateRandomNumberInRange(100, 1_000);
+            default:
+                throw new IllegalStateException("Unexpected verb value: " + verb);
+        }
     }
 }

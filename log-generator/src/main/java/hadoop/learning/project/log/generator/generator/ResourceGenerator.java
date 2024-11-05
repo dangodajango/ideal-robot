@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.String.format;
+
 @Component
 @Slf4j
 public class ResourceGenerator {
@@ -27,17 +29,17 @@ public class ResourceGenerator {
             endpointsWithId = Files.readAllLines(Paths.get("log-generator/src/main/resources/endpoints_with_id.txt"));
             assert !endpointsWithId.isEmpty() : "endpoints_with_id.txt must have at least 1 entry";
             endpointsWithId.forEach(endpointWithId -> {
-                assert !endpointWithId.isBlank() : "endpointWithId must not be blank, but it was - %s".formatted(endpointWithId);
-                assert endpointWithId.contains("{id}") : "endpointWithId must contain an {id} tag, but it doesn't - %s".formatted(endpointWithId);
-                assert endpointWithId.substring(1).split("/").length == 2 : "endpointWithId must contain only 2 sections, but it contains - %s (%s)".formatted(endpointWithId.substring(1).split("/").length == 2, endpointWithId);
+                assert !endpointWithId.isEmpty() : "endpointWithId must not be empty";
+                assert endpointWithId.contains("{id}") : format("endpointWithId must contain an {id} tag, but it doesn't - %s", endpointWithId);
+                assert endpointWithId.substring(1).split("/").length == 2 : format("endpointWithId must contain only 2 sections, but it contains - %s (%s)", endpointWithId.substring(1).split("/").length == 2, endpointWithId);
             });
 
             endpointsWithoutId = Files.readAllLines(Paths.get("log-generator/src/main/resources/endpoints_without_id.txt"));
             assert !endpointsWithoutId.isEmpty() : "endpoints_without_id.txt must have at least 1 entry";
             endpointsWithoutId.forEach(endpointWithoutId -> {
-                assert !endpointWithoutId.isBlank() : "endpointsWithoutId must not be blank, but it was - %s".formatted(endpointsWithoutId);
-                assert !endpointWithoutId.contains("{id}") : "endpointWithoutId must not contain an {id} tag, but it does - %s".formatted(endpointWithoutId);
-                assert endpointWithoutId.substring(1).split("/").length == 1 : "endpointWithoutId must not have more than 1 sections in it, but it contains - %s (%s)".formatted(endpointWithoutId.substring(1).split("/").length, endpointWithoutId);
+                assert !endpointWithoutId.isEmpty() : format("endpointsWithoutId must not be empty, but it was - %s", endpointsWithoutId);
+                assert !endpointWithoutId.contains("{id}") : format("endpointWithoutId must not contain an {id} tag, but it does - %s", endpointWithoutId);
+                assert endpointWithoutId.substring(1).split("/").length == 1 : format("endpointWithoutId must not have more than 1 sections in it, but it contains - %s (%s)", endpointWithoutId.substring(1).split("/").length, endpointWithoutId);
             });
         } catch (IOException exception) {
             log.error("Error occurred while retrieving the endpoints", exception);
@@ -48,13 +50,24 @@ public class ResourceGenerator {
     public String generateResource() {
         final int randomVerbIndex = randomNumberGenerator.generateRandomNumberInRange(0, HTTP_VERBS.length - 1);
         final HttpVerbs httpVerb = HTTP_VERBS[randomVerbIndex];
-        final String endpoint = switch (httpVerb) {
-            case PUT, DELETE -> retrieveEndpointWithId();
-            case POST, HEAD -> retrieveEndpointWithoutId();
-            case GET -> retrieveRandomEndpoint();
-        };
+        String endpoint;
+        switch (httpVerb) {
+            case PUT:
+            case DELETE:
+                endpoint = retrieveEndpointWithId();
+                break;
+            case POST:
+            case HEAD:
+                endpoint = retrieveEndpointWithoutId();
+                break;
+            case GET:
+                endpoint = retrieveRandomEndpoint();
+                break;
+            default:
+                throw new IllegalStateException(format("Incorrect HTTP verb - %s", httpVerb.getVerb()));
+        }
         final String httpVersion = retrieveRandomHttpVersion();
-        return "%s %s %s".formatted(httpVerb.getVerb(), endpoint, httpVersion);
+        return format("%s %s %s", httpVerb.getVerb(), endpoint, httpVersion);
     }
 
     private String retrieveEndpointWithId() {
@@ -80,12 +93,15 @@ public class ResourceGenerator {
 
     private String retrieveRandomHttpVersion() {
         final int randomHttpVersionProbability = randomNumberGenerator.generateRandomNumberInRange(1, 3);
-        return switch (randomHttpVersionProbability) {
-            case 1 -> "HTTP/1.1";
-            case 2 -> "HTTP/2";
-            case 3 -> "HTTP/3";
-            default ->
-                    throw new IllegalStateException("Unexpected randomHttpVersionProbability value: " + randomHttpVersionProbability);
-        };
+        switch (randomHttpVersionProbability) {
+            case 1:
+                return "HTTP/1.1";
+            case 2:
+                return "HTTP/2";
+            case 3:
+                return "HTTP/3";
+            default:
+                throw new IllegalStateException("Unexpected randomHttpVersionProbability value: " + randomHttpVersionProbability);
+        }
     }
 }

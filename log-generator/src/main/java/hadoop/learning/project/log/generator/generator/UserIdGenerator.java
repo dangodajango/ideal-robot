@@ -24,9 +24,9 @@ public class UserIdGenerator {
             availableUserIds = Files.readAllLines(Paths.get("log-generator/src/main/resources/user_ids.txt"));
             assert !availableUserIds.isEmpty() : "user_ids.txt must have at least 1 entry";
             availableUserIds.forEach(availableUserId -> {
-                assert !availableUserId.isBlank() : "availableUserId must not be blank but it was - %s".formatted(availableUserId);
-                assert availableUserId.length() >= 5 : "availableUserId length must be at least 5 characters long, but it is - %s".formatted(availableUserId);
-                assert availableUserId.length() <= 15 : "availableUserId length must be at most 15 characters long, but it was = %s".formatted(availableUserId);
+                assert !availableUserId.isEmpty() : String.format("availableUserId must not be blank but it was - %s", availableUserId);
+                assert availableUserId.length() >= 5 : String.format("availableUserId length must be at least 5 characters long, but it is - %s", availableUserId);
+                assert availableUserId.length() <= 15 : String.format("availableUserId length must be at most 15 characters long, but it was = %s", availableUserId);
             });
         } catch (IOException | SecurityException exception) {
             log.error("Error occurred while reading user_ids.txt", exception);
