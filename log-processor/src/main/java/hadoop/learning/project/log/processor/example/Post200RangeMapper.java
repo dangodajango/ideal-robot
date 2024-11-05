@@ -1,4 +1,4 @@
-package hadoop.learning.project.log.processor.single.purpose;
+package hadoop.learning.project.log.processor.example;
 
 import hadoop.learning.project.log.processor.model.LogLine;
 import hadoop.learning.project.log.processor.model.Resource;
