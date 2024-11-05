@@ -26,11 +26,13 @@ java -jar log-generator/target/log-generator.jar
 ```
 
 4. From the root directory, run the log-processor jar using Hadoop.
-   You should specify the input and output directories path on the HDFS as command line arguments.
+   You should specify the main class for the job you want to execute and the input and output directories path on the
+   HDFS as command line arguments.
+
    NB! The output directory path must be a non-existing directory on the HDFS.
 
 ```console
-hadoop jar log-processor/target/log-processor.jar hadoop/learning/project/log/processor/DemoApplication /logs /output
+hadoop jar log-processor/target/log-processor.jar hadoop/learning/project/log/processor/response/size/AverageResponseSizeJob /logs /output
 ```
 
 5. Check the results in the output directory on the HDFS:
